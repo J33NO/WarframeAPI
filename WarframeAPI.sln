@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarframeAPI", "WarframeAPI\WarframeAPI.csproj", "{3770227B-3F93-4E30-B91F-B707E2870B1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3770227B-3F93-4E30-B91F-B707E2870B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3770227B-3F93-4E30-B91F-B707E2870B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3770227B-3F93-4E30-B91F-B707E2870B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3770227B-3F93-4E30-B91F-B707E2870B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {435CE620-0AD6-4964-8DE4-75CA2AF21803}
+	EndGlobalSection
+EndGlobal
