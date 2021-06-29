@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="91.0.4472.10100" />
+    <PackageReference Include="SeleniumCSharpHelper" Version="1.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
