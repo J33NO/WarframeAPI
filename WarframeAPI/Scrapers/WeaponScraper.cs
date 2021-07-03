@@ -8,11 +8,14 @@ using SeleniumCSharpHelper;
 using System.Collections.ObjectModel;
 using WarframeAPI.Models;
 using Microsoft.Extensions.Configuration;
+using WarframeAPI.DAL;
+using System.Data.Entity.Migrations;
 
 namespace WarframeAPI.Scrapers
 {
     public class WeaponScraper
     {
+        public static LocalContext ctx = new LocalContext();
         public static IWebDriver driver;
 
         public WeaponScraper()
@@ -20,11 +23,11 @@ namespace WarframeAPI.Scrapers
 
         }
 
-        public List<Weapons> GetPrimaryInfo()
+        public static void ScrapePrimaryInfo()
         {
             string appUrl = "https://warframe.fandom.com/wiki/Weapon_Comparison";
             int i = 1;
-            List<Weapons> weapons = new List<Weapons>();
+            List<Primary> weapons = new List<Primary>();
             WebDriverExtensions.Browser_NavigateChrome(ref driver, appUrl, title: "Weapon Comparison | WARFRAME Wiki | Fandom", maximize: true);
             By weaponLink = By.XPath("//*[@id='tabber-0cddd21e4906375db194dc7c826bbe9e']/div[1]/div/div/table/tbody/tr");
             ReadOnlyCollection<IWebElement> elements = driver.FindElements(weaponLink);
@@ -67,7 +70,7 @@ namespace WarframeAPI.Scrapers
                 IWebElement weapon_accuracy = weaponElement.FindElement(weaponAccuracy);
                 IWebElement weapon_intro = weaponElement.FindElement(weaponIntro);
 
-                Weapons weapon = new Weapons
+                Primary weapon = new Primary
                 {
                     name = weapon_name.Text,
                     trigger = weapon_trigger.Text,
@@ -90,8 +93,11 @@ namespace WarframeAPI.Scrapers
                 i++;
             }
             driver.Close();
-            return weapons;
-
+            foreach(Primary weapon in weapons)
+            {
+                ctx.Primary.AddOrUpdate(weapon);
+            }
+            ctx.SaveChanges();
         }
     }
 }

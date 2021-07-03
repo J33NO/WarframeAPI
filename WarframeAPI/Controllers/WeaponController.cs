@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using WarframeAPI.DAL;
 using WarframeAPI.Models;
 using WarframeAPI.Scrapers;
@@ -14,19 +11,33 @@ namespace WarframeAPI.Controllers
     [Route("[controller]")]
     public class WeaponController : ControllerBase
     {
+        public LocalContext ctx = new LocalContext();
 
         [HttpGet]
         [Route("GetAllPrimary")]
-        public List<Weapons> GetAllPrimary()
+        public List<Primary> GetAllPrimary()
         {
-            using (var ctx = new LocalContext())
+            bool updatePrimary = ScraperController.DataNeedsToBeScraped("Primary");
+            if (updatePrimary == false)
             {
-                var weapons = (from w in ctx.Weapon
-                               select w).ToList();
-
-                if(weapons != null)
+                List<Primary> primaryWeapons = ctx.Primary.ToList();
+                if(primaryWeapons != null)
                 {
-                    return weapons;
+                    return primaryWeapons;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                WeaponScraper.ScrapePrimaryInfo();
+                ScraperController.UpdateScrapeData("Primary");
+                List<Primary> primaryWeapons = ctx.Primary.ToList();
+                if (primaryWeapons != null)
+                {
+                    return primaryWeapons;
                 }
                 else
                 {
