@@ -12,8 +12,10 @@ namespace WarframeAPI.DAL
     {
         public LocalContext() : base("Server=.;Database=Warframe;Trusted_Connection=True;")
         {
+            Database.SetInitializer<LocalContext>(new DropCreateDatabaseIfModelChanges<LocalContext>());
         }
 
-        public DbSet<Weapons> Weapon { get; set; }
+        public DbSet<Primary> Primary { get; set; }
+        public DbSet<ScrapeData> ScrapeData { get; set; }
     }
 }

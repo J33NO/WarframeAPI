@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace WarframeAPI.Models
 {
-    [Table("Weapon")]
-    public class Weapons
+    public class Primary
     {
-        [Key]
         public int id { get; set; }
         public string name { get; set; }
         public string trigger { get; set; }
