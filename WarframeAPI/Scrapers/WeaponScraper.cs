@@ -15,15 +15,15 @@ namespace WarframeAPI.Scrapers
 {
     public class WeaponScraper
     {
-        public static LocalContext ctx = new LocalContext();
-        public static IWebDriver driver;
+        public LocalContext ctx = new LocalContext();
+        public IWebDriver driver;
 
         public WeaponScraper()
         {
 
         }
 
-        public static void ScrapePrimaryInfo()
+        public void ScrapePrimaryInfo()
         {
             string appUrl = "https://warframe.fandom.com/wiki/Weapon_Comparison";
             int i = 1;
@@ -97,6 +97,45 @@ namespace WarframeAPI.Scrapers
             {
                 ctx.Primary.AddOrUpdate(weapon);
             }
+            ctx.SaveChanges();
+        }
+
+        public bool DataNeedsToBeScraped(string category)
+        {
+            DateTime minDate = new DateTime(1992, 2, 28);
+            DateTime today = DateTime.Today;
+            LocalContext ctx = new LocalContext();
+            ScrapeData scrapeData = ctx.ScrapeData.Where(x => x.category == category).FirstOrDefault();
+            DateTime lastScraped = scrapeData is null ? minDate : Convert.ToDateTime(scrapeData.lastScrapeDate);
+
+            if (lastScraped == minDate)
+            {
+                //Never been scraped, go seed db
+                return true;
+            }
+            else if (today.Day - lastScraped.Day >= 1)
+            {
+                //Greater than 1 day since last scrape, go scrape
+                return true;
+            }
+            else
+            {
+                //Data has been scraped within the last day, do nothing
+                return false;
+            }
+        }
+
+        public void UpdateScrapeData(string category)
+        {
+            var ctx = new LocalContext();
+            ScrapeData scrapeData = ctx.ScrapeData.Where(x => x.category == category).FirstOrDefault();
+            if (scrapeData == null)
+            {
+                scrapeData = new ScrapeData();
+            }
+            scrapeData.lastScrapeDate = DateTime.Today;
+            scrapeData.category = category;
+            ctx.ScrapeData.AddOrUpdate(scrapeData);
             ctx.SaveChanges();
         }
     }
