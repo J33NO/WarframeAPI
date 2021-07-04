@@ -13,12 +13,12 @@ using System.Data.Entity.Migrations;
 
 namespace WarframeAPI.Scrapers
 {
-    public class WeaponScraper
+    public class PrimaryScraper
     {
         public LocalContext ctx = new LocalContext();
         public IWebDriver driver;
 
-        public WeaponScraper()
+        public PrimaryScraper()
         {
 
         }
@@ -113,7 +113,7 @@ namespace WarframeAPI.Scrapers
                 //Never been scraped, go seed db
                 return true;
             }
-            else if (today.Day - lastScraped.Day >= 1)
+            else if (today.Day - lastScraped.Day >= 4)
             {
                 //Greater than 1 day since last scrape, go scrape
                 return true;
