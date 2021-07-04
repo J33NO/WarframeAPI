@@ -12,7 +12,7 @@ namespace WarframeAPI.Controllers
     public class WeaponController : ControllerBase
     {
         public LocalContext ctx = new LocalContext();
-        public WeaponScraper scraper = new WeaponScraper();
+        public PrimaryScraper scraper = new PrimaryScraper();
 
         [HttpGet]
         [Route("GetAllPrimary")]
@@ -39,6 +39,39 @@ namespace WarframeAPI.Controllers
                 if (primaryWeapons != null)
                 {
                     return primaryWeapons;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPrimary/{name}")]
+        public Primary GetPrimary(string name)
+        {
+            bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
+            if (updatePrimary == false)
+            {
+                Primary primaryWeapon = ctx.Primary.Where(x => x.name == name).FirstOrDefault();
+                if (primaryWeapon != null)
+                {
+                    return primaryWeapon;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                scraper.ScrapePrimaryInfo();
+                scraper.UpdateScrapeData("Primary");
+                Primary primaryWeapon = ctx.Primary.Where(x => x.name == name).FirstOrDefault();
+                if (primaryWeapon != null)
+                {
+                    return primaryWeapon;
                 }
                 else
                 {
