@@ -15,12 +15,13 @@ namespace WarframeAPI.Scrapers
 {
     public class PrimaryScraper
     {
-        public LocalContext ctx = new LocalContext();
+        private readonly LocalContext _context;
         public IWebDriver driver;
 
-        public PrimaryScraper()
-        {
 
+        public PrimaryScraper(LocalContext ctx)
+        {
+            _context = ctx;
         }
 
         public void ScrapePrimaryInfo()
@@ -95,17 +96,16 @@ namespace WarframeAPI.Scrapers
             driver.Close();
             foreach(Primary weapon in weapons)
             {
-                ctx.Primary.AddOrUpdate(weapon);
+                _context.Primary.Update(weapon);
             }
-            ctx.SaveChanges();
+            _context.SaveChanges();
         }
 
         public bool DataNeedsToBeScraped(string category)
         {
             DateTime minDate = new DateTime(1992, 2, 28);
             DateTime today = DateTime.Today;
-            LocalContext ctx = new LocalContext();
-            ScrapeData scrapeData = ctx.ScrapeData.Where(x => x.category == category).FirstOrDefault();
+            ScrapeData scrapeData = _context.ScrapeData.SingleOrDefault(x => x.category == category);
             DateTime lastScraped = scrapeData is null ? minDate : Convert.ToDateTime(scrapeData.lastScrapeDate);
 
             if (lastScraped == minDate)
@@ -127,16 +127,15 @@ namespace WarframeAPI.Scrapers
 
         public void UpdateScrapeData(string category)
         {
-            var ctx = new LocalContext();
-            ScrapeData scrapeData = ctx.ScrapeData.Where(x => x.category == category).FirstOrDefault();
+            ScrapeData scrapeData = _context.ScrapeData.Where(x => x.category == category).FirstOrDefault();
             if (scrapeData == null)
             {
                 scrapeData = new ScrapeData();
             }
             scrapeData.lastScrapeDate = DateTime.Today;
             scrapeData.category = category;
-            ctx.ScrapeData.AddOrUpdate(scrapeData);
-            ctx.SaveChanges();
+            _context.ScrapeData.Update(scrapeData);
+            _context.SaveChanges();
         }
     }
 }

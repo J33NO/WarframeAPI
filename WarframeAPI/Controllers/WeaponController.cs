@@ -11,17 +11,22 @@ namespace WarframeAPI.Controllers
     [Route("[controller]")]
     public class WeaponController : ControllerBase
     {
-        public LocalContext ctx = new LocalContext();
-        public PrimaryScraper scraper = new PrimaryScraper();
+        private readonly LocalContext _context;
+
+        public WeaponController(LocalContext ctx)
+        {
+            _context = ctx;
+        }
 
         [HttpGet]
         [Route("GetAllPrimary")]
         public List<Primary> GetAllPrimary()
         {
+            PrimaryScraper scraper = new PrimaryScraper(_context);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
             if (updatePrimary == false)
             {
-                List<Primary> primaryWeapons = ctx.Primary.ToList();
+                List<Primary> primaryWeapons = _context.Primary.ToList();
                 if(primaryWeapons != null)
                 {
                     return primaryWeapons;
@@ -35,7 +40,7 @@ namespace WarframeAPI.Controllers
             {
                 scraper.ScrapePrimaryInfo();
                 scraper.UpdateScrapeData("Primary");
-                List<Primary> primaryWeapons = ctx.Primary.ToList();
+                List<Primary> primaryWeapons = _context.Primary.ToList();
                 if (primaryWeapons != null)
                 {
                     return primaryWeapons;
@@ -51,10 +56,11 @@ namespace WarframeAPI.Controllers
         [Route("GetPrimary/{name}")]
         public Primary GetPrimary(string name)
         {
+            PrimaryScraper scraper = new PrimaryScraper(_context);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
             if (updatePrimary == false)
             {
-                Primary primaryWeapon = ctx.Primary.Where(x => x.name == name).FirstOrDefault();
+                Primary primaryWeapon = _context.Primary.Where(x => x.name == name).FirstOrDefault();
                 if (primaryWeapon != null)
                 {
                     return primaryWeapon;
@@ -68,7 +74,7 @@ namespace WarframeAPI.Controllers
             {
                 scraper.ScrapePrimaryInfo();
                 scraper.UpdateScrapeData("Primary");
-                Primary primaryWeapon = ctx.Primary.Where(x => x.name == name).FirstOrDefault();
+                Primary primaryWeapon = _context.Primary.Where(x => x.name == name).FirstOrDefault();
                 if (primaryWeapon != null)
                 {
                     return primaryWeapon;

@@ -1,21 +1,27 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
 using System.Threading.Tasks;
+using WarframeAPI.Extensions;
 using WarframeAPI.Models;
 
 namespace WarframeAPI.DAL
 {
     public class LocalContext : DbContext
     {
-        public LocalContext() : base("Server=.;Database=Warframe;Trusted_Connection=True;")
+        public LocalContext(DbContextOptions<LocalContext> options)
+        : base(options)
         {
-            Database.SetInitializer<LocalContext>(new DropCreateDatabaseIfModelChanges<LocalContext>());
+
         }
 
         public DbSet<Primary> Primary { get; set; }
         public DbSet<ScrapeData> ScrapeData { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.RemovePluralizingTableNameConvention();
+        }
     }
 }
