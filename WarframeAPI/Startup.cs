@@ -29,7 +29,6 @@ namespace WarframeAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration.GetSection("MyConfiguration").Get<MyConfiguration>());
-            //services.Configure<MyConfiguration>(Configuration.GetSection("MyConfiguration"));
             services.AddDbContext<LocalContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:LocalContext"]));
             services.AddControllers();
             services.AddSwaggerGen(c =>
