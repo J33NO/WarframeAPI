@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using WarframeAPI.DAL;
@@ -12,17 +13,20 @@ namespace WarframeAPI.Controllers
     public class WeaponController : ControllerBase
     {
         private readonly LocalContext _context;
+        private readonly MyConfiguration _myConfiguration;
 
-        public WeaponController(LocalContext ctx)
+
+        public WeaponController(LocalContext ctx, MyConfiguration myConfiguration)
         {
             _context = ctx;
+            _myConfiguration = myConfiguration;
         }
 
         [HttpGet]
         [Route("GetAllPrimary")]
         public List<Primary> GetAllPrimary()
         {
-            PrimaryScraper scraper = new PrimaryScraper(_context);
+            PrimaryScraper scraper = new PrimaryScraper(_context, _myConfiguration);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
             if (updatePrimary == false)
             {
@@ -56,7 +60,7 @@ namespace WarframeAPI.Controllers
         [Route("GetPrimary/{name}")]
         public Primary GetPrimary(string name)
         {
-            PrimaryScraper scraper = new PrimaryScraper(_context);
+            PrimaryScraper scraper = new PrimaryScraper(_context, _myConfiguration);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
             if (updatePrimary == false)
             {

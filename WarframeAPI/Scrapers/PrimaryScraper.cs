@@ -10,6 +10,7 @@ using WarframeAPI.Models;
 using Microsoft.Extensions.Configuration;
 using WarframeAPI.DAL;
 using System.Data.Entity.Migrations;
+using Microsoft.Extensions.Options;
 
 namespace WarframeAPI.Scrapers
 {
@@ -17,16 +18,20 @@ namespace WarframeAPI.Scrapers
     {
         private readonly LocalContext _context;
         public IWebDriver driver;
+        private readonly MyConfiguration _myConfiguration;
 
 
-        public PrimaryScraper(LocalContext ctx)
+
+        public PrimaryScraper(LocalContext ctx, MyConfiguration myConfiguration)
         {
             _context = ctx;
+            _myConfiguration = myConfiguration;
+
         }
 
         public void ScrapePrimaryInfo()
         {
-            string appUrl = "https://warframe.fandom.com/wiki/Weapon_Comparison";
+            string appUrl = _myConfiguration.PrimaryWeaponUrl;
             int i = 1;
             List<Primary> weapons = new List<Primary>();
             WebDriverExtensions.Browser_NavigateChrome(ref driver, appUrl, title: "Weapon Comparison | WARFRAME Wiki | Fandom", maximize: true);
