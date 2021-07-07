@@ -59,41 +59,27 @@ namespace WarframeAPI.Scrapers
                 By weaponAccuracy = By.XPath(path + "/td[15]");
                 By weaponIntro = By.XPath(path + "/td[16]/a");
 
-                IWebElement weapon_name = weaponElement.FindElement(weaponName);
-                IWebElement weapon_trigger = weaponElement.FindElement(weaponTrigger);
-                IWebElement weapon_dmg = weaponElement.FindElement(weaponDmg);
-                IWebElement weapon_critChance = weaponElement.FindElement(weaponCritChance);
-                IWebElement weapon_critDmgMult = weaponElement.FindElement(weaponCritDmgMultiplier);
-                IWebElement weapon_statusChance = weaponElement.FindElement(weaponStatusChance);
-                IWebElement weapon_fireRate = weaponElement.FindElement(weaponFireRate);
-                IWebElement weapon_rivenDispo = weaponElement.FindElement(weaponRivenDispo);
-                IWebElement weapon_masteryReq = weaponElement.FindElement(weaponMasteryReq);
-                IWebElement weapon_magSize = weaponElement.FindElement(weaponMagSize);
-                IWebElement weapon_ammoCap = weaponElement.FindElement(weaponAmmoCap);
-                IWebElement weapon_reloadSpd = weaponElement.FindElement(weaponReloadSpd);
-                IWebElement weapon_projType = weaponElement.FindElement(weaponProjType);
-                IWebElement weapon_punchThrough = weaponElement.FindElement(weaponPunchThrough);
-                IWebElement weapon_accuracy = weaponElement.FindElement(weaponAccuracy);
-                IWebElement weapon_intro = weaponElement.FindElement(weaponIntro);
+                string weapon_critChance = weaponElement.FindElement(weaponCritChance).Text == "N/A" ? "0" : weaponElement.FindElement(weaponCritChance).Text;
+                string weapon_statusChance = weaponElement.FindElement(weaponStatusChance).Text;
 
                 Primary weapon = new Primary
                 {
-                    name = weapon_name.Text,
-                    trigger = weapon_trigger.Text,
-                    dmg = Convert.ToDouble(weapon_dmg.Text),
-                    critChance = weapon_critChance.Text,
-                    critDmgMultiplier = weapon_critDmgMult.Text,
-                    statusChance = weapon_statusChance.Text,
-                    fireRate = Convert.ToDouble(weapon_fireRate.Text),
-                    rivenDispo = weapon_rivenDispo.Text,
-                    masteryReq = weapon_masteryReq.Text,
-                    magSize = Convert.ToInt32(weapon_magSize.Text),
-                    ammoCap = weapon_ammoCap.Text,
-                    reloadSpeed = weapon_reloadSpd.Text,
-                    projectileType = weapon_projType.Text,
-                    punchThrough = weapon_punchThrough.Text,
-                    accuracy = weapon_accuracy.Text,
-                    intro = weapon_intro.Text
+                    name = weaponElement.FindElement(weaponName).Text,
+                    trigger = weaponElement.FindElement(weaponTrigger).Text,
+                    dmg = Convert.ToDouble(weaponElement.FindElement(weaponDmg).Text),
+                    critChance = (Convert.ToDouble(weapon_critChance.Replace("%", "")) / 100),
+                    critDmgMultiplier = weaponElement.FindElement(weaponCritDmgMultiplier).Text,
+                    statusChance = (Convert.ToDouble(weapon_statusChance.Replace("%", "")) / 100),
+                    fireRate = Convert.ToDouble(weaponElement.FindElement(weaponFireRate).Text),
+                    rivenDispo = Convert.ToDouble(weaponElement.FindElement(weaponRivenDispo).Text == "N/A" ? "0" : weaponElement.FindElement(weaponRivenDispo).Text),
+                    masteryReq = Convert.ToInt32(weaponElement.FindElement(weaponMasteryReq).Text == "N/A" ? "0" : weaponElement.FindElement(weaponMasteryReq).Text),
+                    magSize = Convert.ToInt32(weaponElement.FindElement(weaponMagSize).Text),
+                    ammoCap = Convert.ToInt32(weaponElement.FindElement(weaponAmmoCap).Text == "N/A" ? "0" : weaponElement.FindElement(weaponAmmoCap).Text),
+                    reloadSpeed = weaponElement.FindElement(weaponReloadSpd).Text,
+                    projectileType = weaponElement.FindElement(weaponProjType).Text,
+                    punchThrough = weaponElement.FindElement(weaponPunchThrough).Text,
+                    accuracy = Convert.ToDouble(weaponElement.FindElement(weaponAccuracy).Text == "N/A" ? "0" : weaponElement.FindElement(weaponAccuracy).Text),
+                    intro = weaponElement.FindElement(weaponIntro).Text
                 };
                 weapons.Add(weapon);
                 i++;
@@ -115,17 +101,17 @@ namespace WarframeAPI.Scrapers
 
             if (lastScraped == minDate)
             {
-                //Never been scraped, go seed db
+                //Never been scraped, go seed db.
                 return true;
             }
             else if (today.Day - lastScraped.Day >= 4)
             {
-                //Greater than 1 day since last scrape, go scrape
+                //At least 4 days since last update, go scrape.
                 return true;
             }
             else
             {
-                //Data has been scraped within the last day, do nothing
+                //Data has been scraped within the last day, do nothing.
                 return false;
             }
         }

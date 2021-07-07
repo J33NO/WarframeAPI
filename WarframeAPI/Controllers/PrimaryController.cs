@@ -10,21 +10,21 @@ namespace WarframeAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeaponController : ControllerBase
+    public class PrimaryController : ControllerBase
     {
         private readonly LocalContext _context;
         private readonly MyConfiguration _myConfiguration;
 
 
-        public WeaponController(LocalContext ctx, MyConfiguration myConfiguration)
+        public PrimaryController(LocalContext ctx, MyConfiguration myConfiguration)
         {
             _context = ctx;
             _myConfiguration = myConfiguration;
         }
 
         [HttpGet]
-        [Route("GetAllPrimary")]
-        public List<Primary> GetAllPrimary()
+        [Route("GetAll")]
+        public List<Primary> GetAll()
         {
             PrimaryScraper scraper = new PrimaryScraper(_context, _myConfiguration);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
@@ -57,8 +57,8 @@ namespace WarframeAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetPrimary/{name}")]
-        public Primary GetPrimary(string name)
+        [Route("GetSingle/{name}")]
+        public Primary GetSingle(string name)
         {
             PrimaryScraper scraper = new PrimaryScraper(_context, _myConfiguration);
             bool updatePrimary = scraper.DataNeedsToBeScraped("Primary");
